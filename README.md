@@ -5,7 +5,7 @@ Luciano  Matias Mattiauda   github: (pichonTT)  dni: 41378912
 
 Ivo Mirko Elián  Narváez    github: IvoMirkoE22 dni: 42786377
 
-Damian Flauta Gamarra       github: damizpy     dni: 44614239
+Damian Flavio Gamarra       github: damizpy     dni: 44614239
 
 
 Explicacion: 
