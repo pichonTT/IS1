@@ -4,8 +4,18 @@ from is1.extensions import db
 
 pregunta_etiqueta = db.Table(
     "pregunta_etiqueta",
-    db.Column("pregunta_id", db.Integer, db.ForeignKey("pregunta.id"), primary_key=True),
-    db.Column("etiqueta_id", db.Integer, db.ForeignKey("etiqueta.id"), primary_key=True),
+    db.Column(
+        "pregunta_id",
+        db.Integer,
+        db.ForeignKey("pregunta.id"),
+        primary_key=True
+    ),
+    db.Column(
+        "etiqueta_id",
+        db.Integer,
+        db.ForeignKey("etiqueta.id"),
+        primary_key=True
+    ),
 )
 
 
@@ -17,16 +27,35 @@ class Pregunta(db.Model):
     cuerpo = db.Column(db.String, nullable=False)
     fechaPubli = db.Column(db.String, nullable=False)
 
-    usuario_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
-    categoria_id = db.Column(db.Integer, db.ForeignKey("categoria.id"), nullable=False)
+    usuario_id = db.Column(
+        db.Integer,
+        db.ForeignKey("usuario.id"),
+        nullable=False
+    )
+    categoria_id = db.Column(
+        db.Integer,
+        db.ForeignKey("categoria.id"),
+        nullable=False
+    )
 
+    usuario = db.relationship(
+        "Usuario",
+        back_populates="preguntas"
+    )
+    categoria = db.relationship(
+        "Categoria",
+        back_populates="preguntas"
+    )
     etiquetas = db.relationship(
         "Etiqueta",
         secondary=pregunta_etiqueta,
         back_populates="preguntas"
     )
-
     respuestas = db.relationship(
         "Respuesta",
+        back_populates="pregunta"
+    )
+    votos = db.relationship(
+        "Voto",
         back_populates="pregunta"
     )
