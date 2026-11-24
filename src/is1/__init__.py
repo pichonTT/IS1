@@ -2,8 +2,8 @@
 from flask import Flask
 
 from is1.api.health import health_bp
-from is1.extensions import db
 from is1.config import Config
+from is1.extensions import db
 
 
 def create_app():

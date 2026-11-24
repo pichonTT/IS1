@@ -1,8 +1,6 @@
-from abc import ABC, abstractmethod
+class Autor:
 
-
-class Autor(ABC):
-
-    @abstractmethod
     def obtenerIdentificador(self):
-        pass
+        raise NotImplementedError(
+            "Las clases que implementan Autor deben definir obtenerIdentificador()"
+        )

@@ -1,7 +1,6 @@
 
 from is1.extensions import db
 
-
 pregunta_etiqueta = db.Table(
     "pregunta_etiqueta",
     db.Column(

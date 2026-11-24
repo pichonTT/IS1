@@ -1,5 +1,6 @@
 from is1.extensions import db
 
+
 class Categoria(db.Model):
     __tablename__ = "categoria"
 

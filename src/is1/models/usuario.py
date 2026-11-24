@@ -1,8 +1,9 @@
 from is1.extensions import db
+from is1.models.autor import Autor
 from is1.models.rol_usuario import RolUsuario
 
 
-class Usuario(db.Model):
+class Usuario(db.Model, Autor):
     __tablename__ = "usuario"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -19,3 +20,6 @@ class Usuario(db.Model):
         "Voto",
         back_populates="usuario"
     )
+
+    def obtenerIdentificador(self):
+        return self.id
