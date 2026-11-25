@@ -1,0 +1,102 @@
+
+{% extends "base.html" %}
+
+{% block title %}Inicio | IS1{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <span class="eyebrow">COMUNIDAD IS1</span>
+        <h1>Compartí tus preguntas.<br>Encontrá respuestas.</h1>
+        <p>Un espacio para aprender, colaborar y compartir conocimientos.</p>
+
+        {% if usuario_actual %}
+            <a href="{{ url_for('web.nueva_pregunta') }}" class="button">
+                Publicar una pregunta
+            </a>
+        {% else %}
+            <a href="{{ url_for('web.registro') }}" class="button">
+                Comenzar ahora
+            </a>
+        {% endif %}
+    </div>
+    <div class="hero-decoration">
+        <span>?</span>
+    </div>
+</section>
+
+<section class="questions-section">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">CONOCIMIENTO COMPARTIDO</span>
+            <h2>Preguntas de la comunidad</h2>
+        </div>
+        <span class="question-count">{{ preguntas|length }} preguntas</span>
+    </div>
+
+    <form action="{{ url_for('web.inicio') }}" method="GET" class="search-form">
+        <input
+            type="search"
+            name="q"
+            placeholder="Buscar por título o contenido..."
+            value="{{ busqueda }}"
+        >
+        <button type="submit" class="button">Buscar</button>
+    </form>
+
+    {% if preguntas %}
+        <div class="question-list">
+            {% for pregunta in preguntas %}
+                <article class="question-card">
+                    <div class="question-card-top">
+                        <span class="category">{{ pregunta.categoria.nombre }}</span>
+                        <span class="question-date">{{ pregunta.fechaPubli[:10] }}</span>
+                    </div>
+
+                    <h3>
+                        <a href="{{ url_for('web.ver_pregunta', pregunta_id=pregunta.id) }}">
+                            {{ pregunta.titulo }}
+                        </a>
+                    </h3>
+
+                    <p class="question-excerpt">
+                        {{ pregunta.cuerpo|truncate(180) }}
+                    </p>
+
+                    {% if pregunta.etiquetas %}
+                        <div class="tags">
+                            {% for etiqueta in pregunta.etiquetas %}
+                                <span class="tag">{{ etiqueta.nombre }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="question-card-bottom">
+                        <span>{{ pregunta.usuario.email }}</span>
+                        <span>{{ pregunta.respuestas|length }} respuestas</span>
+                        <a href="{{ url_for('web.ver_pregunta', pregunta_id=pregunta.id) }}">
+                            Ver pregunta →
+                        </a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h3>No hay preguntas todavía</h3>
+            <p>
+                {% if busqueda %}
+                    No encontramos preguntas que coincidan con tu búsqueda.
+                {% else %}
+                    Sé la primera persona en compartir una pregunta.
+                {% endif %}
+            </p>
+            {% if usuario_actual %}
+                <a href="{{ url_for('web.nueva_pregunta') }}" class="button">
+                    Crear pregunta
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

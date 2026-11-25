@@ -1,0 +1,70 @@
+
+{% extends "base.html" %}
+
+{% block title %}Nueva pregunta | IS1{% endblock %}
+
+{% block content %}
+<section class="form-page">
+    <div class="page-heading">
+        <span class="eyebrow">COMPARTÍ TUS CONOCIMIENTOS</span>
+        <h1>Publicar una pregunta</h1>
+        <p>Contá qué necesitás saber. La comunidad puede ayudarte.</p>
+    </div>
+
+    <div class="content-card">
+        <form method="POST" class="form">
+            <label for="titulo">Título de la pregunta</label>
+            <input
+                type="text"
+                id="titulo"
+                name="titulo"
+                maxlength="200"
+                placeholder="¿Qué querés preguntar?"
+                required
+            >
+
+            <label for="cuerpo">Descripción</label>
+            <textarea
+                id="cuerpo"
+                name="cuerpo"
+                rows="7"
+                placeholder="Explicá tu pregunta con todos los detalles necesarios..."
+                required
+            ></textarea>
+
+            <label for="categoria_id">Categoría</label>
+            <select id="categoria_id" name="categoria_id" required>
+                <option value="">Seleccioná una categoría</option>
+                {% for categoria in categorias %}
+                    <option value="{{ categoria.id }}">
+                        {{ categoria.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label for="etiquetas">Etiquetas</label>
+            <input
+                type="text"
+                id="etiquetas"
+                name="etiquetas"
+                placeholder="Python, programación, bases de datos"
+            >
+            <small>Separá las etiquetas con comas.</small>
+
+            <label class="checkbox-label">
+                <input type="checkbox" name="ia_help" id="ia_help">
+                <span>Solicitar ayuda automática de IA (etiqueta ia-help)</span>
+            </label>
+
+            <div class="form-actions">
+                <a href="{{ url_for('web.inicio') }}" class="button button-outline">
+                    Cancelar
+                </a>
+                <button type="submit" class="button">
+                    Publicar pregunta
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

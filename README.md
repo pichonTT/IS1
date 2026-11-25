@@ -1,103 +1,161 @@
-# IS1
-repositorio para el proyecto integrador de ingeniería de software1
+# IS1 — Comunidad de preguntas y respuestas
 
-Luciano  Matias Mattiauda   github: (pichonTT)  dni: 41378912
+Proyecto Integrador de **Ingeniería de Software I**.
 
-Ivo Mirko Elián  Narváez    github: IvoMirkoE22 dni: 42786377
+IS1 es una aplicación web que permite a los usuarios compartir preguntas, publicar respuestas, votar contenidos y recibir asistencia automática mediante un agente de inteligencia artificial.
 
-Damian Flavio Gamarra       github: damizpy     dni: 44614239
+## Funcionalidades
 
+- **Usuarios:** registro e inicio de sesión.
+- **Preguntas:** publicación, listado, consulta y búsqueda.
+- **Categorías y etiquetas:** clasificación de las preguntas.
+- **Respuestas:** publicación de respuestas por parte de los usuarios.
+- **Respuestas aceptadas:** el autor de una pregunta puede seleccionar una respuesta como aceptada.
+- **Votaciones:** votos positivos y negativos sobre preguntas y respuestas. Cada usuario puede modificar su voto.
+- **Asistencia de IA:** generación de respuestas mediante la etiqueta `ia-help` o a través de una solicitud manual.
+- **Automatización:** revisión periódica de preguntas sin respuesta mediante un programador de tareas.
+- **API REST:** operaciones disponibles mediante endpoints HTTP.
+- **Interfaz web:** acceso a las funcionalidades principales desde el navegador.
 
-Explicacion: 
-PATRÓN STRATEGY USADO
+> **Nota sobre IA:** las estrategias Gemini, OpenAI y local están simuladas en esta versión del proyecto. No se realizan consultas reales a esos proveedores.
 
-1. Estrategia
+## Tecnologías utilizadas
 
-GenerarRespuestaStrategy
+- Python 3.13
+- Flask
+- Flask-SQLAlchemy
+- Flask-Migrate y Alembic
+- SQLite
+- SQLAlchemy
+- APScheduler
+- Pytest
+- Ruff
+- HTML, CSS y Jinja2
+- uv para la gestión del proyecto y sus dependencias
 
-Es la interfaz que define la operación común:
+## Requisitos
 
-generarRespuesta(Pregunta p) : String
+- Python 3.13 o superior.
+- uv instalado.
+- Git para obtener el repositorio.
 
-Permite que distintos proveedores de IA generen respuestas a través de una misma interfaz.
+## Instalación
 
+Clonar el repositorio:
 
-2. Estrategias Concretas
+```bash
+git clone URL_DEL_REPOSITORIO
+cd IS1
+```
 
-EstrategiaOpenAI
+Instalar las dependencias:
 
-EstrategiaGemini
+```bash
+uv sync
+```
 
-EstrategiaModeloLocal
+Configurar las variables de entorno en Git Bash:
 
-Implementan la interfaz GenerarRespuestaStrategy.
+```bash
+export SECRET_KEY="una-clave-segura-para-desarrollo"
+export DATABASE_URL="sqlite:///is1.db"
+```
 
-Cada estrategia resuelve la generación de respuestas utilizando su proveedor específico.
+El archivo `.env.example` contiene una plantilla de configuración. La aplicación obtiene estas variables desde el entorno del sistema.
 
+## Base de datos
 
-3. Contexto
+Para crear o actualizar la estructura de la base de datos, ejecutar:
 
-AgenteIA
+```bash
+uv run flask --app 'is1:create_app' db upgrade
+```
 
-Utiliza una referencia a GenerarRespuestaStrategy y no depende directamente de una estrategia concreta.
+Las migraciones se encuentran en la carpeta `migrations/`.
 
-De esta forma puede reemplazarse un proveedor por otro sin modificar el diseño central del agente.
+## Ejecución
 
-Por ejemplo:
+Iniciar el servidor de desarrollo:
 
-- OpenAI
-- Gemini
-- Modelo Local
+```bash
+uv run flask --app 'is1:create_app' run
+```
 
-son intercambiables para el AgenteIA.
+Abrir en el navegador:
 
+```text
+http://127.0.0.1:5000
+```
 
-Diferencia entre Autor y Strategy
+## API REST
 
-Autor
+Los principales endpoints disponibles son:
 
-Representa quién produce o firma una respuesta.
+| Método | Endpoint | Descripción |
+|---|---|---|
+| GET | `/health` | Verificar el estado del servidor |
+| POST | `/usuarios` | Registrar un usuario |
+| GET | `/preguntas` | Listar preguntas |
+| POST | `/preguntas` | Crear una pregunta |
+| GET | `/preguntas/<id>` | Consultar una pregunta |
+| POST | `/preguntas/<id>/respuestas` | Crear una respuesta |
+| POST | `/preguntas/<id>/respuestas/ia` | Generar respuesta de IA |
+| PATCH | `/preguntas/<id>/respuestas/<respuesta_id>/aceptar` | Aceptar una respuesta |
+| POST | `/preguntas/<id>/votos` | Votar una pregunta |
+| POST | `/respuestas/<id>/votos` | Votar una respuesta |
+| POST | `/automatizacion/ia/preguntas-sin-respuesta` | Ejecutar revisión automática manualmente |
 
-Puede ser:
+La interfaz web también dispone de rutas propias para registro, inicio de sesión, publicación y consulta de preguntas, respuestas y votos.
 
-- Usuario
-- AgenteIA
+## Pruebas y calidad
 
+Ejecutar las pruebas automatizadas:
 
-Strategy
+```bash
+uv run pytest -v
+```
 
-Representa cómo se genera el contenido automático.
+Verificar el estilo y la calidad del código:
 
-Puede ser:
+```bash
+uv run ruff check .
+```
 
-- EstrategiaOpenAI
-- EstrategiaGemini
-- EstrategiaModeloLocal
+Verificar el archivo de dependencias:
 
+```bash
+uv lock --check
+```
 
-Relación entre ambos
+## Estructura del proyecto
 
-No son la misma cosa.
+```text
+IS1/
+├── migrations/             # Migraciones de la base de datos
+├── src/
+│   └── is1/
+│       ├── api/            # Endpoints de la API REST
+│       ├── models/         # Modelos de datos
+│       ├── services/       # Servicios y automatización de IA
+│       ├── static/         # Archivos CSS
+│       ├── templates/      # Plantillas HTML
+│       ├── web/            # Rutas de la interfaz web
+│       ├── config.py       # Configuración
+│       └── __init__.py     # Creación de la aplicación
+├── tests/                  # Pruebas automatizadas
+├── .env.example            # Plantilla de configuración
+├── .gitignore
+├── pyproject.toml
+├── uv.lock
+└── README.md
+```
 
-Un AgenteIA puede ser el autor de una respuesta y, al mismo tiempo, utilizar cualquiera de las estrategias disponibles para generar el contenido.
+## Integrantes
 
-Por ejemplo:
+- **Luciano Matias Mattiauda** — [GitHub: pichonTT](https://github.com/pichonTT)
+- **Ivo Mirko Elian Narvaez** — [GitHub: IvoMirkoE22](https://github.com/IvoMirkoE22)
+- **Damian Flavio Gamarra** — [GitHub: damizpy](https://github.com/damizpy)
 
-AgenteIA (autor)
-        |
-        +----> EstrategiaOpenAI
+---
 
-AgenteIA (autor)
-        |
-        +----> EstrategiaGemini
-
-AgenteIA (autor)
-        |
-        +----> EstrategiaModeloLocal
-
-Es decir:
-
-- Autor responde a la pregunta: ¿Quién escribió la respuesta?
-- Strategy responde a la pregunta: ¿Cómo se generó la respuesta?
-
-Esa distinción suele ser la clave para entender por qué en el TP aparecen tanto la abstracción de Autor como el patrón Strategy.
+**Proyecto Integrador — Ingeniería de Software I**

@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}IS1 - Comunidad de preguntas{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <a class="brand" href="{{ url_for('web.inicio') }}">IS1</a>
+
+        <nav>
+            <a href="{{ url_for('web.inicio') }}">Inicio</a>
+
+            {% if usuario_actual %}
+                <a href="{{ url_for('web.nueva_pregunta') }}">Hacer una pregunta</a>
+                <span class="user-email">{{ usuario_actual.email }}</span>
+                <form action="{{ url_for('web.logout') }}" method="POST" class="inline-form">
+                    <button type="submit" class="button button-outline">Cerrar sesión</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('web.login') }}">Ingresar</a>
+                <a href="{{ url_for('web.registro') }}" class="button">Crear cuenta</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                    <div class="alert alert-{{ categoria }}">{{ mensaje }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>IS1 · Comunidad de preguntas y respuestas</p>
+        <p>Proyecto Integrador · Ingeniería de Software I</p>
+    </footer>
+</body>
+</html>

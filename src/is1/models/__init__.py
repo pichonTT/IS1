@@ -1,3 +1,4 @@
+from is1.models.agente_ia import AgenteIA
 from is1.models.autor import Autor
 from is1.models.categoria import Categoria
 from is1.models.etiqueta import Etiqueta
@@ -9,6 +10,7 @@ from is1.models.usuario import Usuario
 from is1.models.voto import Voto
 
 __all__ = [
+    "AgenteIA",
     "Autor",
     "Categoria",
     "Etiqueta",
