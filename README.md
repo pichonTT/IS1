@@ -73,6 +73,61 @@ uv run flask --app 'is1:create_app' db upgrade
 
 Las migraciones se encuentran en la carpeta `migrations/`.
 
+<< Configuración inicial de la base de datos >>
+
+Después de clonar el repositorio, instalar las dependencias y ejecutar las migraciones, es necesario cargar las categorías iniciales.
+
+1. Instalar dependencias
+
+  uv sync
+
+2. Crear o actualizar la estructura de la base de datos
+
+  uv run flask --app 'is1:create_app' db upgrade
+
+3. Cargar las categorías iniciales
+
+Ejecutar desde la carpeta raíz del proyecto:
+
+uv run python - <<'PY'
+import sqlite3
+
+conexion = sqlite3.connect("src/instance/is1.db")
+
+for nombre in ("Programacion", "Programación"):
+    existe = conexion.execute(
+        "SELECT 1 FROM categoria WHERE nombre = ?",
+        (nombre,)
+    ).fetchone()
+
+    if not existe:
+        conexion.execute(
+            "INSERT INTO categoria (nombre) VALUES (?)",
+            (nombre,)
+        )
+
+conexion.commit()
+
+print("Categorías cargadas correctamente:")
+print(conexion.execute(
+    "SELECT id, nombre FROM categoria"
+).fetchall())
+
+conexion.close()
+PY
+
+Este procedimiento evita insertar categorías duplicadas cuando se ejecuta nuevamente.
+
+4. Ejecutar la aplicación
+
+    uv run flask --app 'is1:create_app' run
+
+    Abrir en el navegador: http://127.0.0.1:5000
+
+5. Crear un usuario
+
+  Registrarse desde la interfaz web para comenzar a utilizar la aplicación, publicar preguntas, responder y votar.
+
 ## Ejecución
 
 Iniciar el servidor de desarrollo:
